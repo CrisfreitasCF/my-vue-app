@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 
 const promptText = ref('') // To store user input
 const submittedPrompts = ref([]) // To store submitted prompts
+const selectedFiles = ref([]) // To store the selected files
 
 // List of predefined prompts
 const initialPrompts = [
@@ -34,6 +35,11 @@ const submitPrompt = () => {
 // Function to set the selected prompt in the text area
 const selectPrompt = (prompt) => {
   promptText.value = prompt // Replace the text area content with the selected prompt
+}
+
+// Function to handle file selection
+const handleFileChange = (event) => {
+  selectedFiles.value = Array.from(event.target.files) // Store the selected files in an array
 }
 </script>
 
@@ -85,6 +91,26 @@ const selectPrompt = (prompt) => {
       </div>
     </div>
 
+    <!-- File Upload Button -->
+    <div class="row mt-3 justify-content-center">
+      <div class="col-md-6 text-center">
+        <input type="file" class="form-control" multiple @change="handleFileChange">
+        <small class="text-muted">You can attach multiple files.</small>
+      </div>
+    </div>
+
+    <!-- Display Selected Files -->
+    <div class="row mt-3 justify-content-center" v-if="selectedFiles.length">
+      <div class="col-md-6">
+        <h3 class="text-center">Selected Files:</h3>
+        <ul class="list-group mt-3">
+          <li v-for="(file, index) in selectedFiles" :key="index" class="list-group-item">
+            {{ file.name }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
     <!-- List of Submitted Prompts -->
     <div class="row mt-5 justify-content-center" v-if="submittedPrompts.length">
       <div class="col-md-6">
@@ -131,4 +157,9 @@ textarea {
 h3 {
   margin-bottom: 20px;
 }
+
+input[type="file"] {
+  margin-top: 10px;
+}
 </style>
+
